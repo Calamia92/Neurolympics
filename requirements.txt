@@ -9,3 +9,6 @@ beautifulsoup4
 requests
 plotly
 scikit-learn
+psycopg2-binary
+sqlalchemy
+python-dotenv
