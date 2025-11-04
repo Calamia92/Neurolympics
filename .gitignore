@@ -126,9 +126,17 @@ Thumbs.db
 output/
 results/
 figures/
+
+# Data cache and temporary files
+data/cache/
+data/exports/
+data/scraped/        # Data already pushed to PostgreSQL database
+*.cache
+*.tmp
 .idea/workspace.xml
 .idea/vcs.xml
 .idea/Neurolympics.iml
 .idea/modules.xml
 .idea/inspectionProfiles/profiles_settings.xml
 .claude/settings.local.json
+/data/scraped/
