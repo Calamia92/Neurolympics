@@ -131,3 +131,4 @@ figures/
 .idea/Neurolympics.iml
 .idea/modules.xml
 .idea/inspectionProfiles/profiles_settings.xml
+.claude/settings.local.json

@@ -47,7 +47,7 @@ class DatabaseConnection:
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(text("SELECT 1"))
-                print("OK - Connexion à la base de données réussie !")
+                print("OK - Connexion a la base de donnees reussie !")
                 return True
         except Exception as e:
             print(f"ERREUR - Erreur de connexion : {e}")
@@ -76,7 +76,7 @@ class DatabaseConnection:
         """Insère un DataFrame dans une table"""
         try:
             df.to_sql(table_name, self.engine, if_exists=if_exists, index=False)
-            print(f"OK - Données insérées dans la table '{table_name}' avec succès !")
+            print(f"OK - Donnees inserees dans la table '{table_name}' avec succes !")
             return True
         except Exception as e:
             print(f"ERREUR - Erreur lors de l'insertion : {e}")
