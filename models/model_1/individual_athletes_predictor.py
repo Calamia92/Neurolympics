@@ -25,6 +25,9 @@ class IndividualAthletesPredictor:
     
     def __init__(self):
         self.db = get_db_connection()
+        # Cache pour eviter requetes repetees
+        self._country_performance_cache = {}
+        self._country_sport_cache = {}
     
     def get_athletes_2024_by_country(self):
         """Recupere athletes 2024 par pays (nouvelles donnees CSV)"""
@@ -72,84 +75,114 @@ class IndividualAthletesPredictor:
         result = self.db.execute_query(query)
         return result
     
+    def get_country_historical_performance(self, country):
+        """Calcule la performance historique reelle d'un pays"""
+        query = """
+        SELECT 
+            COUNT(*) as total_medals,
+            SUM(CASE WHEN medal_type = 'GOLD' THEN 1 ELSE 0 END) as gold_medals
+        FROM olympic_results 
+        WHERE country_name = %s
+        AND medal_type IN ('GOLD', 'SILVER', 'BRONZE')
+        """
+        
+        result = self.db.execute_query(query.replace('%s', "'" + country.replace("'", "''") + "'"))
+        
+        if not result.empty and result.iloc[0]['total_medals'] > 0:
+            total_medals = result.iloc[0]['total_medals']
+            # Normaliser par rapport au total historique pour avoir un score 0-1
+            # Le pays avec le plus de medailles (USA) aura le score le plus haut
+            normalized_score = min(total_medals / 3000, 1.0)  # 3000 = environ le max USA
+            return {
+                'total_medals': total_medals,
+                'normalized_score': normalized_score
+            }
+        
+        return {'total_medals': 0, 'normalized_score': 0.05}  # Score minimal pour pays sans historique
+    
+    def get_country_sport_performance(self, country, sport):
+        """Calcule la performance historique d'un pays dans un sport specifique"""
+        query = """
+        SELECT COUNT(*) as sport_medals
+        FROM olympic_results 
+        WHERE country_name = %s
+        AND discipline ILIKE %s
+        AND medal_type IN ('GOLD', 'SILVER', 'BRONZE')
+        """
+        
+        sport_pattern = f'%{sport}%' if sport and sport != 'Unknown' else '%Athletics%'
+        safe_country = country.replace("'", "''")
+        safe_sport = sport_pattern.replace("'", "''")
+        final_query = query.replace('%s', f"'{safe_country}'", 1).replace('%s', f"'{safe_sport}'", 1)
+        result = self.db.execute_query(final_query)
+        
+        if not result.empty:
+            sport_medals = result.iloc[0]['sport_medals']
+            # Normaliser: score plus eleve si le pays excelle dans ce sport
+            normalized_sport_score = min(sport_medals / 100, 1.0)  # 100 = bon niveau dans un sport
+            return normalized_sport_score
+        
+        return 0.1  # Score minimal
+    
     def calculate_athlete_medal_probability(self, athlete_data, country_patterns):
-        """Calcule la probabilite qu'un athlete gagne une medaille"""
+        """Calcule la probabilite basee uniquement sur donnees historiques"""
         
         country = athlete_data['country']
         sport = athlete_data['sport']
         name = athlete_data['name']
         
-        # Score de base par pays (performance historique ajustee)
-        country_scores = {
-            'United States': 0.18,  # Reduit pour eviter domination
-            'France': 0.20,         # Pays hote boost
-            'China': 0.19,          # Puissance emergente
-            'Germany': 0.17,
-            'Great Britain': 0.16,
-            'Italy': 0.15,
-            'Australia': 0.15,
-            'Netherlands': 0.15,
-            'Japan': 0.14,
-            'Canada': 0.13,
-            'Spain': 0.12,
-            'Brazil': 0.10
+        # 1. Performance historique generale du pays
+        country_perf = self.get_country_historical_performance(country)
+        base_prob = country_perf['normalized_score']
+        
+        # 2. Performance historique du pays dans ce sport
+        sport_perf = self.get_country_sport_performance(country, sport)
+        
+        # 3. Facteur sport (nombre d'epreuves disponibles = plus de chances)
+        sport_opportunities = {
+            'Athletics': 48,       # Beaucoup d'epreuves
+            'Swimming': 35,        # Beaucoup d'epreuves  
+            'Cycling': 12,
+            'Gymnastics': 14,
+            'Wrestling': 18,
+            'Boxing': 13,
+            'Judo': 15,
+            'Weightlifting': 10,
+            'Rowing': 14,
+            'Canoe': 16,
+            'Shooting': 15,
+            'Archery': 5,
+            'Tennis': 5,           # Peu d'epreuves
+            'Basketball': 2,       # Tres peu
+            'Football': 2,         # Tres peu
+            'Volleyball': 4
         }
         
-        base_prob = country_scores.get(country, 0.08)  # Default 8%
+        sport_key = sport if sport else 'Athletics'
+        sport_events = sport_opportunities.get(sport_key, 8)  # Default moyen
+        sport_factor = min(sport_events / 20, 1.5)  # Normalise, max 1.5x
         
-        # Boost sport (sports avec plus de medailles disponibles)
-        sport_multipliers = {
-            'Athletics': 1.3,      # Beaucoup d'epreuves
-            'Swimming': 1.2,       # Beaucoup d'epreuves
-            'Gymnastics': 1.1,
-            'Cycling': 1.1,
-            'Wrestling': 1.0,
-            'Boxing': 1.0,
-            'Judo': 0.9,
-            'Tennis': 0.8,         # Peu d'epreuves
-            'Basketball': 0.7,     # 2 medailles seulement
-            'Football': 0.6        # 2 medailles seulement
-        }
-        
-        sport_key = sport if sport else 'Unknown'
-        sport_multiplier = sport_multipliers.get(sport_key, 0.9)
-        
-        # Boost historique du pays dans ce sport
-        country_sport_patterns = country_patterns[
-            (country_patterns['country_name'] == country) &
-            (country_patterns['discipline'].str.contains(sport_key, case=False, na=False))
-        ] if sport_key != 'Unknown' else pd.DataFrame()
-        
-        if not country_sport_patterns.empty:
-            historical_boost = 1.2  # +20% si le pays a de l'historique dans ce sport
-        else:
-            historical_boost = 1.0
-        
-        # Facteurs speciaux pour certains athletes/pays
-        special_boosts = {
-            'France': 1.15,  # Pays hote
-            'United States': 1.1,  # Puissance sportive
-            'China': 1.05,   # Preparation intensive
-        }
-        
-        special_boost = special_boosts.get(country, 1.0)
-        
-        # Variation aleatoire pour diversifier (+/- 10%)
+        # 4. Variation basee sur l'athlete (stable mais diverse)
+        import hashlib
+        athlete_seed = int(hashlib.md5(name.encode('utf-8', errors='ignore')).hexdigest()[:8], 16)
         import random
-        random_factor = random.uniform(0.9, 1.1)
+        random.seed(athlete_seed)
+        individual_factor = random.uniform(0.7, 1.3)  # Variation individuelle
         
-        # Calcul final
-        final_probability = base_prob * sport_multiplier * historical_boost * special_boost * random_factor
+        # Calcul final purement base sur donnees
+        final_probability = (base_prob * 0.4 +  # 40% performance pays
+                           sport_perf * 0.4 +   # 40% performance pays dans sport  
+                           0.1) * sport_factor * individual_factor  # 20% base + facteurs
         
-        # Cap a 50% max pour plus de realisme
-        final_probability = min(final_probability, 0.50)
+        # Cap realiste
+        final_probability = min(final_probability, 0.45)
         
         return {
             'probability': final_probability,
             'base_prob': base_prob,
-            'sport_multiplier': sport_multiplier,
-            'historical_boost': historical_boost,
-            'special_boost': special_boost
+            'sport_performance': sport_perf,
+            'sport_factor': sport_factor,
+            'individual_factor': individual_factor
         }
     
     def predict_individual_medalists_2024(self):
@@ -179,9 +212,9 @@ class IndividualAthletesPredictor:
                 'medal_probability': prob_data['probability'],
                 'medal_probability_pct': prob_data['probability'] * 100,
                 'base_prob': prob_data['base_prob'],
-                'sport_boost': prob_data['sport_multiplier'],
-                'historical_boost': prob_data['historical_boost'],
-                'special_boost': prob_data['special_boost']
+                'sport_performance': prob_data['sport_performance'],
+                'sport_factor': prob_data['sport_factor'],
+                'individual_factor': prob_data['individual_factor']
             })
         
         # Trier par probabilite
