@@ -12,3 +12,6 @@ scikit-learn
 psycopg2-binary
 sqlalchemy
 python-dotenv
+unidecode
+tabulate
+groq
