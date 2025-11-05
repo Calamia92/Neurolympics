@@ -1,0 +1,438 @@
+{% extends "base.html" %}
+
+{% block title %}Visualisations - Neurolympics{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">
+        <i class="fas fa-chart-bar text-warning"></i> 
+        Visualisations Interactives
+    </h1>
+    <p class="lead">Graphiques dynamiques des données olympiques</p>
+</div>
+
+<!-- Contrôles -->
+<div class="filter-section">
+    <h3 class="mb-3">
+        <i class="fas fa-sliders-h"></i> Contrôles des Graphiques
+    </h3>
+    
+    <div class="row">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <label for="chartType" class="form-label">Type de graphique</label>
+            <select class="form-select" id="chartType">
+                <option value="athletes_by_country">Athlètes par Pays</option>
+                <option value="sports_distribution">Distribution Sports</option>
+                <option value="predictions_comparison">Comparaison Prédictions</option>
+                <option value="historical_analysis">Analyse Historique</option>
+            </select>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <label for="limitSelect" class="form-label">Nombre d'éléments</label>
+            <select class="form-select" id="limitSelect">
+                <option value="10">Top 10</option>
+                <option value="15" selected>Top 15</option>
+                <option value="20">Top 20</option>
+                <option value="25">Top 25</option>
+            </select>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <label for="colorScheme" class="form-label">Palette de couleurs</label>
+            <select class="form-select" id="colorScheme">
+                <option value="Viridis">Viridis</option>
+                <option value="Plasma">Plasma</option>
+                <option value="Blues">Blues</option>
+                <option value="Reds">Reds</option>
+            </select>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <label class="form-label">&nbsp;</label>
+            <div>
+                <button class="btn btn-olympic w-100" onclick="updateCharts()">
+                    <i class="fas fa-sync-alt"></i> Actualiser
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Graphiques Principaux -->
+<div class="row mb-5">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-users"></i> 
+                    Athlètes par Pays
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="loading-spinner text-center py-4" id="loading1">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Chargement...</p>
+                </div>
+                <div class="chart-container">
+                    <div id="athletesByCountryChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-medal"></i> 
+                    Distribution des Sports
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="loading-spinner text-center py-4" id="loading2">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Chargement...</p>
+                </div>
+                <div class="chart-container">
+                    <div id="sportsDistributionChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Graphiques de Prédictions -->
+<div class="row mb-5">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-flag" style="color: #0055A4;"></i> 
+                    Prédiction France
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="francePredChart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-globe"></i> 
+                    Top 10 Pays Prédits
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="countriesPredChart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analyse Historique -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-history"></i> 
+                    Évolution Historique France vs Prédiction 2024
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="historicalChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Métriques en Temps Réel -->
+<div class="row">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number" id="totalAthletes">-</div>
+            <div class="stat-label">
+                <i class="fas fa-running"></i> Athlètes Analysés
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number" id="totalCountries">-</div>
+            <div class="stat-label">
+                <i class="fas fa-flag"></i> Pays Participants
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number" id="totalSports">-</div>
+            <div class="stat-label">
+                <i class="fas fa-medal"></i> Sports Différents
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number" id="predictedMedals">-</div>
+            <div class="stat-label">
+                <i class="fas fa-trophy"></i> Médailles Prédites
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Options d'Export -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-download"></i> 
+                    Export des Graphiques
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">
+                    Exportez les visualisations en différents formats
+                </p>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-2">
+                        <button class="btn btn-outline-primary w-100" onclick="exportChart('png')">
+                            <i class="fas fa-image"></i> PNG
+                        </button>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-2">
+                        <button class="btn btn-outline-success w-100" onclick="exportChart('svg')">
+                            <i class="fas fa-vector-square"></i> SVG
+                        </button>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-2">
+                        <button class="btn btn-outline-info w-100" onclick="exportChart('pdf')">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-2">
+                        <button class="btn btn-outline-warning w-100" onclick="exportChart('html')">
+                            <i class="fas fa-code"></i> HTML
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    loadAllCharts();
+    updateMetrics();
+});
+
+function loadAllCharts() {
+    showLoadingSpinner();
+    
+    // Charger tous les graphiques
+    loadAthletesByCountryChart();
+    loadSportsDistributionChart();
+    loadFrancePredictionChart();
+    loadCountriesPredictionChart();
+    loadHistoricalChart();
+}
+
+function showLoadingSpinner() {
+    $('.loading-spinner').show();
+}
+
+function hideLoadingSpinner() {
+    $('.loading-spinner').hide();
+}
+
+function loadAthletesByCountryChart() {
+    const limit = $('#limitSelect').val();
+    
+    fetch(`/api/charts/athletes_by_country?limit=${limit}`)
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('athletesByCountryChart', data.data, data.layout, {
+                responsive: true,
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d']
+            });
+            $('#loading1').hide();
+        })
+        .catch(error => {
+            console.error('Erreur chargement graphique athlètes:', error);
+            $('#loading1').hide();
+        });
+}
+
+function loadSportsDistributionChart() {
+    fetch('/api/charts/sports_distribution')
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('sportsDistributionChart', data.data, data.layout, {
+                responsive: true,
+                displayModeBar: true
+            });
+            $('#loading2').hide();
+        })
+        .catch(error => {
+            console.error('Erreur chargement graphique sports:', error);
+            $('#loading2').hide();
+        });
+}
+
+function loadFrancePredictionChart() {
+    fetch('/api/charts/predictions_france')
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('francePredChart', data.data, data.layout, {
+                responsive: true,
+                displayModeBar: true
+            });
+        })
+        .catch(error => {
+            console.error('Erreur chargement prédiction France:', error);
+        });
+}
+
+function loadCountriesPredictionChart() {
+    fetch('/api/charts/predictions_countries')
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('countriesPredChart', data.data, data.layout, {
+                responsive: true,
+                displayModeBar: true
+            });
+        })
+        .catch(error => {
+            console.error('Erreur chargement prédictions pays:', error);
+        });
+}
+
+function loadHistoricalChart() {
+    fetch('/api/charts/historical_france')
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('historicalChart', data.data, data.layout, {
+                responsive: true,
+                displayModeBar: true
+            });
+        })
+        .catch(error => {
+            console.error('Erreur chargement historique:', error);
+        });
+}
+
+function updateCharts() {
+    showLoadingSpinner();
+    
+    const chartType = $('#chartType').val();
+    
+    switch(chartType) {
+        case 'athletes_by_country':
+            loadAthletesByCountryChart();
+            break;
+        case 'sports_distribution':
+            loadSportsDistributionChart();
+            break;
+        case 'predictions_comparison':
+            loadFrancePredictionChart();
+            loadCountriesPredictionChart();
+            break;
+        case 'historical_analysis':
+            loadHistoricalChart();
+            break;
+        default:
+            loadAllCharts();
+    }
+}
+
+function updateMetrics() {
+    // Simuler la récupération des métriques
+    setTimeout(() => {
+        $('#totalAthletes').text('11,110');
+        $('#totalCountries').text('206');
+        $('#totalSports').text('45');
+        $('#predictedMedals').text('~1,000');
+    }, 500);
+}
+
+function exportChart(format) {
+    // Configuration d'export selon le format
+    const exportConfig = {
+        format: format,
+        width: 1200,
+        height: 800,
+        filename: `neurolympics_chart_${Date.now()}`
+    };
+    
+    // Exemple avec le premier graphique visible
+    const chartDiv = document.getElementById('athletesByCountryChart');
+    
+    if (chartDiv && chartDiv.data) {
+        Plotly.downloadImage(chartDiv, exportConfig)
+            .then(() => {
+                // Afficher notification de succès
+                showNotification('success', `Graphique exporté en ${format.toUpperCase()}`);
+            })
+            .catch(error => {
+                console.error('Erreur export:', error);
+                showNotification('error', 'Erreur lors de l\'export');
+            });
+    } else {
+        showNotification('warning', 'Aucun graphique à exporter');
+    }
+}
+
+function showNotification(type, message) {
+    const alertClass = type === 'success' ? 'alert-success' : 
+                      type === 'error' ? 'alert-danger' : 'alert-warning';
+    
+    const notification = `
+        <div class="alert ${alertClass} alert-dismissible fade show position-fixed" 
+             style="top: 80px; right: 20px; z-index: 9999;">
+            <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'exclamation'}-circle"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    $('body').append(notification);
+    
+    // Auto-remove après 3 secondes
+    setTimeout(() => {
+        $('.alert').fadeOut();
+    }, 3000);
+}
+
+// Gestionnaires d'événements pour les contrôles
+$('#limitSelect').on('change', function() {
+    if ($('#chartType').val() === 'athletes_by_country') {
+        loadAthletesByCountryChart();
+    }
+});
+
+$('#colorScheme').on('change', function() {
+    // Recharger les graphiques avec nouvelle palette
+    // (implémentation à compléter selon Plotly)
+    console.log('Changement de palette:', $(this).val());
+});
+</script>
+{% endblock %}

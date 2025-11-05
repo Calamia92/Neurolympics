@@ -1,0 +1,514 @@
+{% extends "base.html" %}
+
+{% block title %}Analyses Avancées - Neurolympics{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">
+        <i class="fas fa-microscope text-info"></i> 
+        Analyses Avancées
+    </h1>
+    <p class="lead">Études approfondies des données olympiques et du modèle IA</p>
+</div>
+
+<!-- Navigation des Analyses -->
+<div class="row mb-4">
+    <div class="col-12">
+        <nav class="nav nav-pills nav-fill">
+            <button class="nav-link active" data-analysis="model-performance" onclick="switchAnalysis(this)">
+                <i class="fas fa-brain"></i> Performance Modèle
+            </button>
+            <button class="nav-link" data-analysis="data-quality" onclick="switchAnalysis(this)">
+                <i class="fas fa-database"></i> Qualité des Données
+            </button>
+            <button class="nav-link" data-analysis="predictions-analysis" onclick="switchAnalysis(this)">
+                <i class="fas fa-chart-line"></i> Analyse Prédictions
+            </button>
+            <button class="nav-link" data-analysis="historical-trends" onclick="switchAnalysis(this)">
+                <i class="fas fa-history"></i> Tendances Historiques
+            </button>
+        </nav>
+    </div>
+</div>
+
+<!-- Analyse Performance Modèle -->
+<div id="model-performance" class="analysis-section">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-brain"></i> 
+                        Performance du Modèle Random Forest V2
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5>Métriques de Performance</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Précision Athlètes:</strong></td>
+                                    <td><span class="badge bg-success">92.7%</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MAE Pays:</strong></td>
+                                    <td><span class="badge bg-info">0.30</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Modèle:</strong></td>
+                                    <td>Random Forest Calibré</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Features:</strong></td>
+                                    <td>11 variables optimisées</td>
+                                </tr>
+                            </table>
+                            
+                            <h6 class="mt-4">Améliorations V2</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    Nettoyage strict des données d'entraînement
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    Calibration des probabilités avec CalibratedClassifierCV
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    Normalisation réaliste (~1000 médailles)
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success"></i>
+                                    Features intelligentes par sport et pays
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <h5>Comparaison V1 vs V2</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Critère</th>
+                                            <th>V1</th>
+                                            <th>V2</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>USA Médailles</td>
+                                            <td><span class="text-danger">263</span></td>
+                                            <td><span class="text-success">~115</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Diversité Top 10</td>
+                                            <td><span class="text-danger">90% France</span></td>
+                                            <td><span class="text-success">Équilibré</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Médailles</td>
+                                            <td><span class="text-danger">~7000</span></td>
+                                            <td><span class="text-success">~1000</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>France (Réel: 64)</td>
+                                            <td><span class="text-warning">63</span></td>
+                                            <td><span class="text-success">~42</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <h6><i class="fas fa-info-circle"></i> Note</h6>
+                                <p class="mb-0">
+                                    Le modèle V1 avait une prédiction correcte pour la France (63 vs 64 réel) 
+                                    mais était complètement irréaliste pour les autres pays. Le V2 privilégie 
+                                    la cohérence globale.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analyse Qualité des Données -->
+<div id="data-quality" class="analysis-section" style="display: none;">
+    <div class="row mb-5">
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-database"></i> 
+                        Qualité des Données d'Entraînement
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <h6>Problèmes Identifiés V1</h6>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Medal_type vides</span>
+                            <span class="badge bg-danger">142,598</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Vraies médailles</span>
+                            <span class="badge bg-success">~20,000</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Ratio pollution</span>
+                            <span class="badge bg-warning">87%</span>
+                        </li>
+                    </ul>
+                    
+                    <h6>Solutions V2</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-filter text-primary"></i>
+                            Filtrage strict: medal_type IN ('GOLD', 'SILVER', 'BRONZE', 'NA')
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-calendar text-info"></i>
+                            Période récente: >= 2000 pour pertinence
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-balance-scale text-success"></i>
+                            Équilibrage artificiel médailles/non-médailles
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chart-pie"></i> 
+                        Statistiques Paris 2024
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h3 class="text-primary">11,110</h3>
+                                <small>Athlètes Qualifiés</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h3 class="text-success">206</h3>
+                                <small>Pays Participants</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h3 class="text-warning">45</h3>
+                                <small>Sports Différents</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h3 class="text-info">100%</h3>
+                                <small>Données Propres</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success mt-3">
+                        <h6><i class="fas fa-check-circle"></i> Qualité V2</h6>
+                        <p class="mb-0">
+                            Les données Paris 2024 sont issues de fichiers CSV officiels, 
+                            garantissant une qualité et une exhaustivité maximales.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analyse des Prédictions -->
+<div id="predictions-analysis" class="analysis-section" style="display: none;">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-chart-line"></i> 
+                        Analyse Détaillée des Prédictions
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h5>🇫🇷 France - Question 1</h5>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <p><strong>Prédiction V2:</strong> ~42 médailles</p>
+                                    <p><strong>Réel 2024:</strong> 64 médailles</p>
+                                    <p><strong>Écart:</strong> -22 médailles</p>
+                                    <hr>
+                                    <h6>Analyse:</h6>
+                                    <ul class="small mb-0">
+                                        <li>V2 plus conservateur que V1</li>
+                                        <li>Facteur pays hôte sous-estimé</li>
+                                        <li>Performance française exceptionnelle</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4">
+                            <h5>🌍 Top Pays - Question 2</h5>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <p><strong>Normalisation:</strong> ~1000 médailles</p>
+                                    <p><strong>USA prédit:</strong> ~115 médailles</p>
+                                    <p><strong>Diversité:</strong> Équilibrée</p>
+                                    <hr>
+                                    <h6>Améliorations:</h6>
+                                    <ul class="small mb-0">
+                                        <li>Fini les 263 médailles USA</li>
+                                        <li>Répartition géographique réaliste</li>
+                                        <li>Facteurs pays adaptés</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4">
+                            <h5>🏃 Athlètes - Question 3</h5>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <p><strong>Échantillon:</strong> 2000 athlètes</p>
+                                    <p><strong>Probabilités:</strong> Calibrées</p>
+                                    <p><strong>Diversité:</strong> Multiculturelle</p>
+                                    <hr>
+                                    <h6>Méthodologie:</h6>
+                                    <ul class="small mb-0">
+                                        <li>Features: âge, expérience, pays</li>
+                                        <li>Calibration pour réalisme</li>
+                                        <li>Plus que des français</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-warning">
+                                <h5><i class="fas fa-lightbulb"></i> Enseignements</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>✅ Forces du Modèle V2:</h6>
+                                        <ul>
+                                            <li>Cohérence globale réaliste</li>
+                                            <li>Diversité géographique</li>
+                                            <li>Données propres et fiables</li>
+                                            <li>Méthodes ML robustes</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>⚠️ Limitations:</h6>
+                                        <ul>
+                                            <li>Conservatisme excessive (France)</li>
+                                            <li>Facteurs exceptionnels non captés</li>
+                                            <li>Données d'entraînement limitées 2000+</li>
+                                            <li>Effets COVID-19 non modélisés</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analyse Tendances Historiques -->
+<div id="historical-trends" class="analysis-section" style="display: none;">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-history"></i> 
+                        Tendances Historiques Olympiques
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5>Évolution France (2000-2024)</h5>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Année</th>
+                                        <th>Ville</th>
+                                        <th>Médailles</th>
+                                        <th>Pays Hôte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2000</td>
+                                        <td>Sydney</td>
+                                        <td>38</td>
+                                        <td>❌</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2004</td>
+                                        <td>Athènes</td>
+                                        <td>33</td>
+                                        <td>❌</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2008</td>
+                                        <td>Pékin</td>
+                                        <td>40</td>
+                                        <td>❌</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2012</td>
+                                        <td>Londres</td>
+                                        <td>34</td>
+                                        <td>❌</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2016</td>
+                                        <td>Rio</td>
+                                        <td>42</td>
+                                        <td>❌</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2021</td>
+                                        <td>Tokyo</td>
+                                        <td>33</td>
+                                        <td>❌</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td>2024</td>
+                                        <td>Paris</td>
+                                        <td><strong>64</strong></td>
+                                        <td>✅</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <h5>Effet Pays Hôte</h5>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <p><strong>Moyenne France (2000-2021):</strong> 37 médailles</p>
+                                    <p><strong>Paris 2024:</strong> 64 médailles</p>
+                                    <p><strong>Augmentation:</strong> +73% 🚀</p>
+                                    <hr>
+                                    <h6>Facteurs d'amélioration:</h6>
+                                    <ul class="small">
+                                        <li>Avantage du terrain</li>
+                                        <li>Support du public</li>
+                                        <li>Préparation ciblée</li>
+                                        <li>Nouveaux sports (Surf, Escalade, etc.)</li>
+                                        <li>Investissements massifs</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <h6><i class="fas fa-chart-line"></i> Leçon pour les Modèles</h6>
+                                <p class="mb-0">
+                                    L'effet pays hôte est plus important que prévu (+73% vs +15% modélisé). 
+                                    Les futurs modèles devront intégrer des facteurs exceptionnels plus forts.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recommandations -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-lightbulb"></i> 
+                    Recommandations pour Futurs Modèles
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h5><i class="fas fa-database text-primary"></i> Données</h5>
+                        <ul>
+                            <li>Intégrer plus de variables contextuelles</li>
+                            <li>Données météo et infrastructure</li>
+                            <li>Investissements par sport/pays</li>
+                            <li>Historique des entraîneurs</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <h5><i class="fas fa-cogs text-warning"></i> Modélisation</h5>
+                        <ul>
+                            <li>Modèles ensemble (XGBoost + RF + NN)</li>
+                            <li>Facteurs pays hôte adaptatifs</li>
+                            <li>Prédiction par discipline</li>
+                            <li>Séries temporelles pour tendances</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <h5><i class="fas fa-chart-line text-success"></i> Validation</h5>
+                        <ul>
+                            <li>Tests sur JO précédents</li>
+                            <li>Validation croisée temporelle</li>
+                            <li>Métriques de cohérence globale</li>
+                            <li>Calibration probabiliste avancée</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function switchAnalysis(button) {
+    // Désactiver tous les boutons et sections
+    $('.nav-link').removeClass('active');
+    $('.analysis-section').hide();
+    
+    // Activer le bouton cliqué
+    $(button).addClass('active');
+    
+    // Afficher la section correspondante
+    const analysisId = $(button).data('analysis');
+    $(`#${analysisId}`).show();
+    
+    // Animation fade in
+    $(`#${analysisId}`).hide().fadeIn(400);
+}
+
+$(document).ready(function() {
+    // Initialiser avec la première section
+    $('#model-performance').show();
+});
+</script>
+{% endblock %}

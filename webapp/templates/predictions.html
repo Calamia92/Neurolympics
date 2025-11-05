@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block title %}Prédictions IA - Neurolympics{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">
+        <i class="fas fa-brain text-success"></i> 
+        Prédictions IA Random Forest V2
+    </h1>
+    <p class="lead">Modèle robuste et réaliste pour les JO Paris 2024</p>
+</div>
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">
+        <i class="fas fa-exclamation-triangle"></i> Erreur
+    </h4>
+    <p>{{ error }}</p>
+</div>
+{% else %}
+
+<!-- Question 1: France -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <i class="fas fa-flag" style="color: #0055A4;"></i> 
+                    Question 1: Médailles France
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="prediction-card">
+                            <div class="text-center">
+                                <div class="prediction-number">{{ france_results.total }}</div>
+                                <h4>Médailles Totales Prédites</h4>
+                                <p class="mb-0">{{ france_results.method }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="card bg-warning text-dark">
+                                    <div class="card-body">
+                                        <h3 class="olympic-gold">{{ france_results.gold }}</h3>
+                                        <p class="mb-0"><i class="fas fa-medal"></i> Or</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h3 class="olympic-silver">{{ france_results.silver }}</h3>
+                                        <p class="mb-0"><i class="fas fa-medal"></i> Argent</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card bg-secondary text-white">
+                                    <div class="card-body">
+                                        <h3 class="olympic-bronze">{{ france_results.bronze }}</h3>
+                                        <p class="mb-0"><i class="fas fa-medal"></i> Bronze</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="chart-container">
+                            <div id="francePredictionChart"></div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3">
+                            <h6><i class="fas fa-info-circle"></i> Méthodologie</h6>
+                            <ul class="mb-0 small">
+                                <li>Analyse historique France (2000+)</li>
+                                <li>Facteur pays hôte (+15%)</li>
+                                <li>{{ france_results.athletes_2024 }} athlètes français qualifiés</li>
+                                <li>Répartition basée sur performances passées</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Question 2: Top Pays -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <i class="fas fa-globe text-warning"></i> 
+                    Question 2: Top 15 Pays
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Rang</th>
+                                        <th>Pays</th>
+                                        <th>Total</th>
+                                        <th>Or</th>
+                                        <th>Athlètes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for country in countries_results %}
+                                    <tr>
+                                        <td>
+                                            {% if loop.index <= 3 %}
+                                                <span class="badge bg-warning">#{{ loop.index }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">#{{ loop.index }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ country.country[:20] }}</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ country.predicted_total }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="olympic-gold">{{ country.predicted_gold }}</span>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ country.athletes_2024 }}</small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="chart-container">
+                            <div id="countriesChart"></div>
+                        </div>
+                        
+                        <div class="alert alert-success mt-3">
+                            <h6><i class="fas fa-check-circle"></i> Améliorations V2</h6>
+                            <ul class="mb-0 small">
+                                <li>✅ Normalisation ~1000 médailles total</li>
+                                <li>✅ Facteurs réalistes par pays</li>
+                                <li>✅ Données 2024 authentiques</li>
+                                <li>✅ Équilibrage géographique</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Question 3: Athlètes Individuels -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <i class="fas fa-running text-success"></i> 
+                    Question 3: Top 20 Athlètes Individuels
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Rang</th>
+                                        <th>Athlète</th>
+                                        <th>Pays</th>
+                                        <th>Sport</th>
+                                        <th>Probabilité</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for athlete in athletes_results %}
+                                    <tr>
+                                        <td>
+                                            {% if loop.index <= 5 %}
+                                                <span class="badge bg-success">#{{ loop.index }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">#{{ loop.index }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ athlete.name[:25] }}</strong>
+                                        </td>
+                                        <td>
+                                            <span class="athlete-badge">{{ athlete.country[:15] }}</span>
+                                        </td>
+                                        <td>
+                                            <small>{{ athlete.sport[:12] }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress me-2" style="width: 60px; height: 6px;">
+                                                    <div class="progress-bar bg-success" style="width: {{ athlete.medal_probability_pct }}%"></div>
+                                                </div>
+                                                <small><strong>{{ "%.1f"|format(athlete.medal_probability_pct) }}%</strong></small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5>
+                                    <i class="fas fa-chart-pie"></i> 
+                                    Statistiques Générales
+                                </h5>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <strong>Athlètes analysés:</strong> 
+                                        {{ athletes_results|length|number_format }}
+                                    </li>
+                                    <li>
+                                        <strong>Médailles estimées:</strong> 
+                                        {{ "%.0f"|format(athletes_results|sum(attribute='medal_probability')) }}
+                                    </li>
+                                    <li>
+                                        <strong>Probabilité moyenne:</strong> 
+                                        {{ "%.1f"|format((athletes_results|sum(attribute='medal_probability') / athletes_results|length) * 100) }}%
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning mt-3">
+                            <h6><i class="fas fa-lightbulb"></i> Modèle Calibré</h6>
+                            <ul class="mb-0 small">
+                                <li>Probabilités réduites pour plus de réalisme</li>
+                                <li>Features: âge, expérience, pays, sport</li>
+                                <li>Échantillon de 2000 athlètes analysés</li>
+                                <li>Calibration CalibratedClassifierCV</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Comparaison Historique -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-history"></i> 
+                    Évolution Historique France vs Prédiction
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div id="historicalChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    {% if not error %}
+    loadPredictionCharts();
+    {% endif %}
+});
+
+function loadPredictionCharts() {
+    // Graphique France
+    fetch('/api/charts/predictions_france')
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('francePredictionChart', data.data, data.layout, {responsive: true});
+        });
+    
+    // Graphique pays
+    fetch('/api/charts/predictions_countries')
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('countriesChart', data.data, data.layout, {responsive: true});
+        });
+    
+    // Graphique historique
+    fetch('/api/charts/historical_france')
+        .then(response => response.json())
+        .then(data => {
+            Plotly.newPlot('historicalChart', data.data, data.layout, {responsive: true});
+        });
+}
+</script>
+{% endblock %}

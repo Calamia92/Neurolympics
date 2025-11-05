@@ -1,0 +1,380 @@
+{% extends "base.html" %}
+
+{% block title %}Données - Neurolympics{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">
+        <i class="fas fa-database text-primary"></i> 
+        Données Olympiques
+    </h1>
+    <p class="lead">Exploration des données Paris 2024 et historiques</p>
+</div>
+
+<!-- Statistiques Générales -->
+<div class="row mb-5">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.athletes_2024|number_format }}</div>
+            <div class="stat-label">
+                <i class="fas fa-running"></i> Athlètes Paris 2024
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.countries }}</div>
+            <div class="stat-label">
+                <i class="fas fa-flag"></i> Pays Participants
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.sports }}</div>
+            <div class="stat-label">
+                <i class="fas fa-medal"></i> Sports Différents
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.historical_games }}</div>
+            <div class="stat-label">
+                <i class="fas fa-history"></i> JO Historiques
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtres de Recherche -->
+<div class="filter-section">
+    <h3 class="mb-3">
+        <i class="fas fa-filter"></i> Filtres de Recherche
+    </h3>
+    
+    <form id="searchForm">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <label for="countryFilter" class="form-label">Pays</label>
+                <select class="form-select" id="countryFilter" name="country">
+                    <option value="">Tous les pays</option>
+                </select>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <label for="sportFilter" class="form-label">Sport</label>
+                <select class="form-select" id="sportFilter" name="sport">
+                    <option value="">Tous les sports</option>
+                </select>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <label for="nameFilter" class="form-label">Nom de l'athlète</label>
+                <input type="text" class="form-control" id="nameFilter" name="name" placeholder="Rechercher...">
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <label for="limitFilter" class="form-label">Nombre de résultats</label>
+                <select class="form-select" id="limitFilter" name="limit">
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <button type="submit" class="btn btn-olympic me-2">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="clearFilters">
+                    <i class="fas fa-times"></i> Effacer
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Top Pays par Athlètes -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-trophy"></i> 
+                    Top 15 Pays - Nombre d'Athlètes Paris 2024
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Pays</th>
+                                <th>Nombre d'Athlètes</th>
+                                <th>Sports Représentés</th>
+                                <th>Progression</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for country in top_countries.itertuples() %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-primary">#{{ loop.index }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ country.country }}</strong>
+                                </td>
+                                <td>
+                                    <span class="stat-number" style="font-size: 1.2rem;">
+                                        {{ country.athletes_count }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="athlete-badge">
+                                        {{ country.sports_count }} sports
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 8px;">
+                                        {% set max_athletes = top_countries.iloc[0]['athletes_count'] %}
+                                        {% set percentage = (country.athletes_count / max_athletes * 100)|round(1) %}
+                                        <div class="progress-bar" style="width: {{ percentage }}%"></div>
+                                    </div>
+                                    <small>{{ percentage }}%</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Résultats de Recherche -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">
+                    <i class="fas fa-users"></i> 
+                    Recherche d'Athlètes
+                </h3>
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="searchResults">
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-search fa-3x mb-3"></i>
+                        <p>Utilisez les filtres ci-dessus pour rechercher des athlètes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Détails Athlète -->
+<div class="modal fade" id="athleteModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-user"></i> Détails de l'Athlète
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="athleteDetails">
+                <!-- Contenu dynamique -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    // Charger les options de filtres
+    loadFilterOptions();
+    
+    // Gestionnaire de formulaire de recherche
+    $('#searchForm').on('submit', function(e) {
+        e.preventDefault();
+        searchAthletes();
+    });
+    
+    // Effacer les filtres
+    $('#clearFilters').on('click', function() {
+        $('#searchForm')[0].reset();
+        $('#searchResults').html(`
+            <div class="text-center text-muted py-5">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <p>Utilisez les filtres ci-dessus pour rechercher des athlètes</p>
+            </div>
+        `);
+    });
+    
+    // Recherche en temps réel sur le nom
+    $('#nameFilter').on('input', debounce(function() {
+        if ($(this).val().length >= 2) {
+            searchAthletes();
+        }
+    }, 500));
+});
+
+function loadFilterOptions() {
+    // Charger les pays
+    $.get('/api/data/countries', function(countries) {
+        const countrySelect = $('#countryFilter');
+        countries.forEach(function(country) {
+            countrySelect.append(`<option value="${country}">${country}</option>`);
+        });
+    });
+    
+    // Charger les sports
+    $.get('/api/data/sports', function(sports) {
+        const sportSelect = $('#sportFilter');
+        sports.forEach(function(sport) {
+            sportSelect.append(`<option value="${sport}">${sport}</option>`);
+        });
+    });
+}
+
+function searchAthletes() {
+    const formData = {
+        country: $('#countryFilter').val(),
+        sport: $('#sportFilter').val(),
+        name: $('#nameFilter').val(),
+        limit: $('#limitFilter').val()
+    };
+    
+    $('#loadingSpinner').show();
+    
+    $.get('/api/search/athletes', formData, function(athletes) {
+        displaySearchResults(athletes);
+    }).fail(function() {
+        $('#searchResults').html(`
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                Erreur lors de la recherche. Veuillez réessayer.
+            </div>
+        `);
+    }).always(function() {
+        $('#loadingSpinner').hide();
+    });
+}
+
+function displaySearchResults(athletes) {
+    if (athletes.length === 0) {
+        $('#searchResults').html(`
+            <div class="text-center text-muted py-5">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <p>Aucun athlète trouvé avec ces critères</p>
+            </div>
+        `);
+        return;
+    }
+    
+    let html = `
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5><i class="fas fa-list"></i> ${athletes.length} athlète(s) trouvé(s)</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Pays</th>
+                        <th>Sport</th>
+                        <th>Âge</th>
+                        <th>Date de Naissance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    athletes.forEach(function(athlete, index) {
+        const birthDate = athlete.date_of_birth ? new Date(athlete.date_of_birth).toLocaleDateString('fr-FR') : 'N/A';
+        
+        html += `
+            <tr>
+                <td><strong>${athlete.name}</strong></td>
+                <td>
+                    <span class="athlete-badge">${athlete.country}</span>
+                </td>
+                <td>${athlete.sport}</td>
+                <td>
+                    <span class="badge bg-info">${athlete.age || 'N/A'}</span>
+                </td>
+                <td>${birthDate}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="showAthleteDetails('${athlete.name}', '${athlete.country}', '${athlete.sport}')">
+                        <i class="fas fa-eye"></i> Détails
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    $('#searchResults').html(html);
+}
+
+function showAthleteDetails(name, country, sport) {
+    $('#athleteDetails').html(`
+        <div class="row">
+            <div class="col-md-6">
+                <h6><i class="fas fa-user"></i> Informations Générales</h6>
+                <ul class="list-unstyled">
+                    <li><strong>Nom:</strong> ${name}</li>
+                    <li><strong>Pays:</strong> ${country}</li>
+                    <li><strong>Sport:</strong> ${sport}</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6><i class="fas fa-chart-line"></i> Statistiques</h6>
+                <p class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    Les détails complets seront disponibles avec les prédictions IA
+                </p>
+            </div>
+        </div>
+    `);
+    
+    $('#athleteModal').modal('show');
+}
+
+// Fonction debounce pour éviter trop de requêtes
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+</script>
+{% endblock %}
