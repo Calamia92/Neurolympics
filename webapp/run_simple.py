@@ -6,6 +6,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from app import app
+import app as app_module
 
 def simple_init():
     """Initialisation simple"""
@@ -19,7 +20,6 @@ def simple_init():
         
         # Test model
         from models.random_forest.olympics_ai_predictor_v2 import OlympicsAIPredictorV2
-        global predictor
         predictor = OlympicsAIPredictorV2()
         
         model_path = "../models/trained/random_forest_model_v2.pkl"
@@ -35,9 +35,9 @@ def simple_init():
             predictor.save_models(model_path)
             print("Modele V2 entraine")
         
-        # Injecter dans l'app
-        app.predictor = predictor
-        app.db = db
+        # Injecter dans les variables globales du module app
+        app_module.db = db
+        app_module.predictor = predictor
         
         return True
         

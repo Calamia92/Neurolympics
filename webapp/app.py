@@ -74,6 +74,10 @@ def index():
 def data():
     """Page données avec tableaux interactifs"""
     
+    # Vérifier que la DB est initialisée
+    if db is None:
+        return "Application non initialisee. Redemarrez l'application.", 500
+    
     # Statistiques générales
     stats = {
         'athletes_2024': db.execute_query("SELECT COUNT(*) as count FROM paris2024_athletes WHERE sport != 'Unknown'").iloc[0]['count'],
@@ -101,6 +105,10 @@ def data():
 def predictions():
     """Page prédictions avec modèle IA V2"""
     
+    # Vérifier que le modèle est initialisé
+    if predictor is None:
+        return render_template('predictions.html', error="Modele IA non initialise. Redemarrez l'application.")
+    
     try:
         # Prédictions France
         france_results = predictor.predict_france_medals_realistic()
@@ -117,7 +125,7 @@ def predictions():
                              athletes_results=athletes_results[:20])
         
     except Exception as e:
-        print(f"Erreur prédictions: {e}")
+        print(f"Erreur predictions: {e}")
         return render_template('predictions.html', error=str(e))
 
 @app.route('/visualizations')
@@ -134,6 +142,9 @@ def analysis():
 def api_countries():
     """API données pays pour filtrage"""
     
+    if db is None:
+        return jsonify({"error": "Database non initialisee"}), 500
+    
     countries = db.execute_query("""
         SELECT DISTINCT country 
         FROM paris2024_athletes 
@@ -146,6 +157,9 @@ def api_countries():
 @app.route('/api/data/sports')
 def api_sports():
     """API données sports pour filtrage"""
+    
+    if db is None:
+        return jsonify({"error": "Database non initialisee"}), 500
     
     sports = db.execute_query("""
         SELECT DISTINCT sport 
@@ -221,6 +235,9 @@ def api_chart_sports_distribution():
 @app.route('/api/charts/predictions_france')
 def api_chart_predictions_france():
     """Graphique: Prédictions France"""
+    
+    if predictor is None:
+        return jsonify({"error": "Modele non initialise"}), 500
     
     france_results = predictor.predict_france_medals_realistic()
     
