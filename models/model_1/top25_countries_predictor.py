@@ -41,8 +41,8 @@ class Top25CountriesPredictor:
         SELECT 
             country,
             COUNT(*) as athletes_2024
-        FROM scraped_athletes_2024 
-        WHERE qualified_2024 = true AND country != ''
+        FROM paris2024_athletes 
+        WHERE sport != 'Unknown' AND country != ''
         GROUP BY country 
         ORDER BY athletes_2024 DESC
         """

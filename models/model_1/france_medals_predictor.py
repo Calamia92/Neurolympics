@@ -162,8 +162,8 @@ class FranceMedalsPredictor:
         # Athletes francais qualifies
         athletes_query = """
         SELECT COUNT(*) as count
-        FROM scraped_athletes_2024 
-        WHERE country = 'France' AND qualified_2024 = true
+        FROM paris2024_athletes 
+        WHERE country = 'France' AND sport != 'Unknown'
         """
         
         athletes_2024 = self.db.execute_query(athletes_query)

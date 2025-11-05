@@ -11,6 +11,15 @@ from src.database.connection import get_db_connection
 import pandas as pd
 import random
 
+def safe_print(text):
+    """Print text safely handling encoding issues"""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Fallback: replace non-ASCII characters
+        safe_text = text.encode('ascii', 'replace').decode('ascii')
+        print(safe_text)
+
 class IndividualAthletesPredictor:
     """Modele de prediction des athletes individuels medailles"""
     
@@ -18,22 +27,32 @@ class IndividualAthletesPredictor:
         self.db = get_db_connection()
     
     def get_athletes_2024_by_country(self):
-        """Recupere athletes 2024 par pays"""
+        """Recupere athletes 2024 par pays (nouvelles donnees CSV)"""
         query = """
         SELECT 
             name,
             country,
             sport,
-            source,
-            type
-        FROM scraped_athletes_2024 
-        WHERE qualified_2024 = true 
-        AND type = 'national_team_wikipedia'
+            age,
+            gender
+        FROM paris2024_athletes 
+        WHERE sport != 'Unknown'
         AND LENGTH(name) > 3
+        AND LENGTH(name) < 50
+        AND name NOT LIKE '%Team%' 
+        AND name NOT LIKE '%Committee%'
         ORDER BY country, name
         """
         
         result = self.db.execute_query(query)
+        
+        # Filtrage en Python pour eviter problemes SQL
+        if not result.empty:
+            filtered_result = result[
+                (~result['name'].str.contains('Committee|Federation|Association|Olympic|Team|Group', case=False, na=False))
+            ]
+            return filtered_result
+        
         return result
     
     def get_historical_medal_patterns_by_country(self):
@@ -60,19 +79,19 @@ class IndividualAthletesPredictor:
         sport = athlete_data['sport']
         name = athlete_data['name']
         
-        # Score de base par pays (performance historique)
+        # Score de base par pays (performance historique ajustee)
         country_scores = {
-            'United States': 0.25,  # 25% chance base
+            'United States': 0.18,  # Reduit pour eviter domination
             'France': 0.20,         # Pays hote boost
-            'Germany': 0.18,
-            'Great Britain': 0.17,
-            'Italy': 0.16,
+            'China': 0.19,          # Puissance emergente
+            'Germany': 0.17,
+            'Great Britain': 0.16,
+            'Italy': 0.15,
             'Australia': 0.15,
-            'Japan': 0.15,
-            'Canada': 0.14,
-            'Netherlands': 0.16,
+            'Netherlands': 0.15,
+            'Japan': 0.14,
+            'Canada': 0.13,
             'Spain': 0.12,
-            'China': 0.22,
             'Brazil': 0.10
         }
         
@@ -115,11 +134,15 @@ class IndividualAthletesPredictor:
         
         special_boost = special_boosts.get(country, 1.0)
         
-        # Calcul final
-        final_probability = base_prob * sport_multiplier * historical_boost * special_boost
+        # Variation aleatoire pour diversifier (+/- 10%)
+        import random
+        random_factor = random.uniform(0.9, 1.1)
         
-        # Cap a 60% max
-        final_probability = min(final_probability, 0.60)
+        # Calcul final
+        final_probability = base_prob * sport_multiplier * historical_boost * special_boost * random_factor
+        
+        # Cap a 50% max pour plus de realisme
+        final_probability = min(final_probability, 0.50)
         
         return {
             'probability': final_probability,
@@ -177,7 +200,11 @@ class IndividualAthletesPredictor:
             sport = athlete['sport'][:11] if len(athlete['sport']) > 11 else athlete['sport']
             chance = f"{athlete['medal_probability_pct']:.1f}%"
             
-            print(f"{i:<3} {name:<25} {country:<15} {sport:<12} {chance:<8}")
+            try:
+                print(f"{i:<3} {name:<25} {country:<15} {sport:<12} {chance:<8}")
+            except UnicodeEncodeError:
+                name_safe = name.encode('ascii', 'replace').decode('ascii')
+                print(f"{i:<3} {name_safe:<25} {country:<15} {sport:<12} {chance:<8}")
             
             top_athletes.append(athlete)
         
@@ -253,7 +280,7 @@ class IndividualAthletesPredictor:
                     name = athlete['name']
                     sport = athlete['sport']
                     chance = athlete['medal_probability_pct']
-                    print(f"  {i}. {name} ({sport}): {chance:.1f}%")
+                    safe_print(f"  {i}. {name} ({sport}): {chance:.1f}%")
         
         return {
             'top_30_athletes': top_athletes,

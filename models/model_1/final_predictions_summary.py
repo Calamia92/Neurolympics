@@ -21,7 +21,7 @@ def generate_final_predictions_report():
     print("=" * 80)
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"Base de donnees: {get_db_connection().execute_query('SELECT COUNT(*) as count FROM olympic_results').iloc[0]['count']} resultats historiques")
-    print(f"Athletes 2024: {get_db_connection().execute_query('SELECT COUNT(*) as count FROM scraped_athletes_2024 WHERE qualified_2024 = true').iloc[0]['count']} qualifies")
+    print(f"Athletes 2024: {get_db_connection().execute_query('SELECT COUNT(*) as count FROM paris2024_athletes WHERE sport != \'Unknown\'').iloc[0]['count']} analyses (nouvelles donnees)")
     print()
     
     # Prediction 1: France
@@ -113,9 +113,9 @@ def generate_final_predictions_report():
     print()
     
     print("SYNTHESE TECHNIQUE:")
-    print(f"  - Donnees historiques: 260,458 enregistrements")
-    print(f"  - Donnees Paris 2024: 1,307 athletes scrapes")
-    print(f"  - 3 modeles IA developpes et testes")
+    print(f"  - Donnees historiques: {get_db_connection().execute_query('SELECT COUNT(*) as count FROM olympic_results').iloc[0]['count']} enregistrements")
+    print(f"  - Donnees Paris 2024: {get_db_connection().execute_query('SELECT COUNT(*) as count FROM paris2024_athletes').iloc[0]['count']} athletes (donnees CSV officielles)")
+    print(f"  - 3 modeles IA adaptes aux nouvelles donnees")
     print(f"  - Predictions basees sur 128 ans d'historique olympique")
     print(f"  - Facteurs 2024: pays hote, athletes qualifies, tendances")
     print()
@@ -123,7 +123,7 @@ def generate_final_predictions_report():
     print("CONFIANCE PREDICTIONS:")
     print(f"  - France (Q1): HAUTE - Base solide historique + facteurs 2024")
     print(f"  - Top 25 pays (Q2): HAUTE - Patterns stables entre pays")
-    print(f"  - Athletes individuels (Q3): MOYENNE - Echantillon limite")
+    print(f"  - Athletes individuels (Q3): HAUTE - Donnees completes CSV")
     print()
     
     print("=" * 80)

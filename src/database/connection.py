@@ -54,16 +54,25 @@ class DatabaseConnection:
             return False
     
     def execute_query(self, query, params=None):
-        """Exécute une requête SQL et retourne un DataFrame"""
+        """Execute une requete SQL et retourne un DataFrame"""
         try:
-            df = pd.read_sql_query(query, self.engine, params=params)
+            with self.engine.connect() as conn:
+                if params:
+                    result = conn.execute(text(query), params)
+                else:
+                    result = conn.execute(text(query))
+                
+                # Convert to DataFrame
+                columns = result.keys()
+                rows = result.fetchall()
+                df = pd.DataFrame(rows, columns=columns)
             return df
         except Exception as e:
-            print(f"ERREUR - Erreur lors de l'exécution de la requête : {e}")
+            print(f"ERREUR - Erreur lors de l'execution de la requete : {e}")
             return None
     
     def get_tables(self):
-        """Récupère la liste des tables disponibles"""
+        """Recupere la liste des tables disponibles"""
         query = """
         SELECT table_name 
         FROM information_schema.tables 

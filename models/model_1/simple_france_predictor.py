@@ -19,8 +19,8 @@ class SimpleFrancePredictor:
         """Recupere le nombre d'athletes francais qualifies"""
         query = """
         SELECT COUNT(*) as count
-        FROM scraped_athletes_2024 
-        WHERE country = 'France' AND qualified_2024 = true
+        FROM paris2024_athletes 
+        WHERE country = 'France' AND sport != 'Unknown'
         """
         
         result = self.db.execute_query(query)
@@ -81,7 +81,7 @@ class SimpleFrancePredictor:
         host_boost = base_prediction * 0.175  # 17.5%
         
         # Boost equipe (plus d'athletes qualifies)
-        baseline_athletes = 320
+        baseline_athletes = 300  # Baseline historique France
         if baseline_athletes > 0:
             athlete_factor = paris_2024_factors['athletes_qualified'] / baseline_athletes
             athlete_boost = (athlete_factor - 1) * base_prediction * 0.3
