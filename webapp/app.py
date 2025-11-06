@@ -16,10 +16,16 @@ import json
 from datetime import datetime
 
 from models.random_forest.olympics_ai_predictor_v2 import OlympicsAIPredictorV2
+from models.xgboost.olympics_ai_predictor_xgboost import OlympicsAIPredictorXGBoost
 from src.database.connection import get_db_connection
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'neurolympics-2024-paris'
+
+# ===== CONFIGURATION MODELE =====
+# Choisir le modèle à utiliser: 'random_forest' ou 'xgboost'
+ACTIVE_MODEL = 'xgboost'  # Change cette valeur pour basculer entre les modèles
+# ================================
 
 # Ajouter un filtre personnalisé pour les nombres
 @app.template_filter('number_format')
@@ -37,32 +43,54 @@ db = None
 def init_app():
     """Initialise l'application et le modèle IA"""
     global predictor, db
-    
+
     try:
         db = get_db_connection()
         if not db.test_connection():
             print("ERREUR: Connexion base de donnees")
             return False
-        
+
         print("OK: Connexion base de donnees")
-        
-        # Charger le modèle V2
-        predictor = OlympicsAIPredictorV2()
-        model_path = "models/trained/random_forest_model_v2.pkl"
-        
-        if os.path.exists(model_path):
-            predictor.load_models(model_path)
-            print("OK: Modele V2 charge")
+
+        # Charger le modèle selon la configuration
+        if ACTIVE_MODEL == 'xgboost':
+            print("MODE: XGBoost V3 Ultra Realiste (Model 2)")
+            predictor = OlympicsAIPredictorXGBoost()
+            model_path = "../models/trained/xgboost_model.pkl"
+
+            if os.path.exists(model_path):
+                predictor.load_models(model_path)
+                print("OK: Modele XGBoost V3 charge")
+            else:
+                print("ERREUR: Modele XGBoost non trouve!")
+                print(f"Chemin: {model_path}")
+                print("Executez le notebook v3_xgboost_prediction.ipynb d'abord")
+                return False
+
+        elif ACTIVE_MODEL == 'random_forest':
+            print("MODE: Random Forest V2 (Model 1)")
+            predictor = OlympicsAIPredictorV2()
+            model_path = "../models/trained/random_forest_model_v2.pkl"
+
+            if os.path.exists(model_path):
+                predictor.load_models(model_path)
+                print("OK: Modele Random Forest V2 charge")
+            else:
+                print("TRAINING: Entrainement du modele V2...")
+                predictor.train_robust_models()
+                predictor.save_models(model_path)
+                print("OK: Modele V2 entraine et sauvegarde")
         else:
-            print("TRAINING: Entrainement du modele V2...")
-            predictor.train_robust_models()
-            predictor.save_models(model_path)
-            print("OK: Modele V2 entraine et sauvegarde")
-        
+            print(f"ERREUR: Modele inconnu '{ACTIVE_MODEL}'")
+            print("Valeurs possibles: 'random_forest' ou 'xgboost'")
+            return False
+
         return True
-        
+
     except Exception as e:
         print(f"ERREUR: Initialisation - {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 @app.route('/')

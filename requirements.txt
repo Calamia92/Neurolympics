@@ -14,4 +14,4 @@ sqlalchemy
 python-dotenv
 unidecode
 tabulate
-groq
+xgboost
