@@ -1,0 +1,186 @@
+{
+  "france": {
+    "gold": 7,
+    "silver": 9,
+    "bronze": 12,
+    "total": 28,
+    "athletes_2024": 600,
+    "method": "Modele IA Random Forest V2 (Realiste)"
+  },
+  "top25_count": 25,
+  "top25_sample": [
+    {
+      "rank": 1,
+      "country": "France",
+      "predicted_total": 127,
+      "predicted_gold": 38,
+      "predicted_silver": 41,
+      "predicted_bronze": 48,
+      "athletes_2024": 600,
+      "sports_count": 45
+    },
+    {
+      "rank": 2,
+      "country": "Germany",
+      "predicted_total": 88,
+      "predicted_gold": 26,
+      "predicted_silver": 29,
+      "predicted_bronze": 33,
+      "athletes_2024": 457,
+      "sports_count": 40
+    },
+    {
+      "rank": 3,
+      "country": "Australia",
+      "predicted_total": 81,
+      "predicted_gold": 24,
+      "predicted_silver": 26,
+      "predicted_bronze": 31,
+      "athletes_2024": 475,
+      "sports_count": 42
+    },
+    {
+      "rank": 4,
+      "country": "Great Britain",
+      "predicted_total": 68,
+      "predicted_gold": 20,
+      "predicted_silver": 22,
+      "predicted_bronze": 26,
+      "athletes_2024": 342,
+      "sports_count": 32
+    },
+    {
+      "rank": 5,
+      "country": "Netherlands",
+      "predicted_total": 62,
+      "predicted_gold": 18,
+      "predicted_silver": 20,
+      "predicted_bronze": 24,
+      "athletes_2024": 289,
+      "sports_count": 32
+    },
+    {
+      "rank": 6,
+      "country": "Japan",
+      "predicted_total": 55,
+      "predicted_gold": 16,
+      "predicted_silver": 18,
+      "predicted_bronze": 21,
+      "athletes_2024": 431,
+      "sports_count": 41
+    },
+    {
+      "rank": 7,
+      "country": "United States",
+      "predicted_total": 46,
+      "predicted_gold": 13,
+      "predicted_silver": 15,
+      "predicted_bronze": 18,
+      "athletes_2024": 619,
+      "sports_count": 44
+    },
+    {
+      "rank": 8,
+      "country": "Italy",
+      "predicted_total": 44,
+      "predicted_gold": 13,
+      "predicted_silver": 14,
+      "predicted_bronze": 17,
+      "athletes_2024": 397,
+      "sports_count": 37
+    },
+    {
+      "rank": 9,
+      "country": "Canada",
+      "predicted_total": 31,
+      "predicted_gold": 9,
+      "predicted_silver": 10,
+      "predicted_bronze": 12,
+      "athletes_2024": 332,
+      "sports_count": 40
+    },
+    {
+      "rank": 10,
+      "country": "China",
+      "predicted_total": 26,
+      "predicted_gold": 7,
+      "predicted_silver": 8,
+      "predicted_bronze": 11,
+      "athletes_2024": 398,
+      "sports_count": 42
+    }
+  ],
+  "athletes_count": 2000,
+  "athletes_top10": [
+    {
+      "name": "BALEW Birhanu",
+      "country": "Bahrain",
+      "sport": "Athletics",
+      "medal_probability": 0.26310640925620193,
+      "medal_probability_pct": 26.310640925620195
+    },
+    {
+      "name": "van den BROECK Naomi",
+      "country": "Belgium",
+      "sport": "Athletics",
+      "medal_probability": 0.2623421010610597,
+      "medal_probability_pct": 26.23421010610597
+    },
+    {
+      "name": "CLARO FIZ Alejandro",
+      "country": "Cuba",
+      "sport": "Boxing",
+      "medal_probability": 0.2613353974586407,
+      "medal_probability_pct": 26.13353974586407
+    },
+    {
+      "name": "FALCON JR Rodolfo",
+      "country": "Cuba",
+      "sport": "Swimming",
+      "medal_probability": 0.2611953457542556,
+      "medal_probability_pct": 26.11953457542556
+    },
+    {
+      "name": "MACIK Ondrej",
+      "country": "Czechia",
+      "sport": "Athletics",
+      "medal_probability": 0.2611565255885717,
+      "medal_probability_pct": 26.11565255885717
+    },
+    {
+      "name": "WANG Zhen",
+      "country": "China",
+      "sport": "Athletics",
+      "medal_probability": 0.2611565255885717,
+      "medal_probability_pct": 26.11565255885717
+    },
+    {
+      "name": "WANG Chang",
+      "country": "China",
+      "sport": "Badminton",
+      "medal_probability": 0.26102535707337826,
+      "medal_probability_pct": 26.102535707337825
+    },
+    {
+      "name": "MURPHY Connor",
+      "country": "Australia",
+      "sport": "Athletics",
+      "medal_probability": 0.260930931882725,
+      "medal_probability_pct": 26.093093188272498
+    },
+    {
+      "name": "JOHANSEN Sara Maria",
+      "country": "Denmark",
+      "sport": "Rowing",
+      "medal_probability": 0.2608522943335146,
+      "medal_probability_pct": 26.085229433351458
+    },
+    {
+      "name": "LINKLETTER Rory",
+      "country": "Canada",
+      "sport": "Athletics",
+      "medal_probability": 0.2605254742555957,
+      "medal_probability_pct": 26.05254742555957
+    }
+  ]
+}
