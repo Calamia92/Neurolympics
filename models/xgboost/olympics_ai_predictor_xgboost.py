@@ -24,13 +24,17 @@ class OlympicsAIPredictorXGBoost:
     def load_models(self, filepath):
         """Charge les résultats pré-calculés depuis le notebook v3"""
 
-        print(f"[XGBoost] Chargement des résultats pré-calculés...")
+        print("[XGBoost] Chargement des resultats pre-calcules...")
 
-        # Charger les résultats pré-calculés
-        results_path = os.path.join(
-            os.path.dirname(filepath),
-            'xgboost_predictions_v3.pkl'
-        )
+        # Si filepath pointe directement vers xgboost_predictions_v3.pkl, l'utiliser
+        if filepath.endswith('xgboost_predictions_v3.pkl'):
+            results_path = filepath
+        else:
+            # Sinon, chercher dans le même dossier
+            results_path = os.path.join(
+                os.path.dirname(filepath),
+                'xgboost_predictions_v3.pkl'
+            )
 
         try:
             if not os.path.exists(results_path):
@@ -42,14 +46,14 @@ class OlympicsAIPredictorXGBoost:
             self.is_loaded = True
 
             metadata = self.precalculated_results.get('metadata', {})
-            print(f"[XGBoost] ✅ Résultats chargés - Version: {metadata.get('version', 'v3')}")
+            print(f"[XGBoost] Resultats charges - Version: {metadata.get('version', 'v3')}")
             print(f"[XGBoost] ROC-AUC: {metadata.get('roc_auc', 'N/A')}")
-            print(f"[XGBoost] Total médailles: {metadata.get('total_medals_predicted', 'N/A'):.1f}")
-            print(f"[XGBoost] ⚡ Mode ultra-rapide activé!")
+            print(f"[XGBoost] Total medailles: {metadata.get('total_medals_predicted', 'N/A'):.1f}")
+            print("[XGBoost] Mode ultra-rapide active!")
 
         except Exception as e:
-            print(f"[XGBoost] ❌ Erreur chargement: {e}")
-            print(f"[XGBoost] 💡 Exécutez le notebook v3_xgboost_prediction.ipynb pour générer les résultats")
+            print(f"[XGBoost] Erreur chargement: {e}")
+            print("[XGBoost] Executez le notebook v3_xgboost_prediction.ipynb pour generer les resultats")
             raise
 
     def predict_france_medals_realistic(self):
@@ -62,7 +66,7 @@ class OlympicsAIPredictorXGBoost:
 
         result = self.precalculated_results['france']
         print(f"[XGBoost] FRANCE 2024: {result['gold']} Or, {result['silver']} Argent, {result['bronze']} Bronze")
-        print(f"[XGBoost] TOTAL: {result['total']} médailles (sur {result['athletes_2024']} athlètes)")
+        print(f"[XGBoost] TOTAL: {result['total']} medailles (sur {result['athletes_2024']} athletes)")
 
         return result
 
@@ -77,7 +81,7 @@ class OlympicsAIPredictorXGBoost:
         predictions = self.precalculated_results['top25_countries']
         print("[XGBoost] TOP 5 PREDIT:")
         for pred in predictions[:5]:
-            print(f"  {pred['rank']}. {pred['country']}: {pred['predicted_total']} médailles")
+            print(f"  {pred['rank']}. {pred['country']}: {pred['predicted_total']} medailles")
 
         return predictions
 
@@ -98,7 +102,7 @@ class OlympicsAIPredictorXGBoost:
 
     def save_models(self, filepath):
         """Sauvegarde non implémentée (résultats générés dans notebook)"""
-        print("[XGBoost] ⚠️  Exportez les résultats depuis le notebook v3_xgboost_prediction.ipynb")
+        print("[XGBoost] Exportez les resultats depuis le notebook v3_xgboost_prediction.ipynb")
 
 
 def main():

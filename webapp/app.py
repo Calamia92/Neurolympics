@@ -23,14 +23,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'neurolympics-2024-paris'
 
 # ===== CONFIGURATION MODELE =====
-# Choisir le modèle à utiliser: 'random_forest' ou 'xgboost'
-ACTIVE_MODEL = 'xgboost'  # Change cette valeur pour basculer entre les modèles
+# Modèle actif: XGBoost V3 Ultra-Réaliste
+ACTIVE_MODEL = 'xgboost'  # Modèle XGBoost V3 avec feature engineering avancé
 # ================================
 
 # Ajouter un filtre personnalisé pour les nombres
 @app.template_filter('number_format')
 def number_format(value):
-    """Formate les nombres avec des séparateurs de milliers"""
+    """Formate les nombres avec des separateurs de milliers"""
     try:
         return f"{int(value):,}"
     except (ValueError, TypeError):
@@ -41,7 +41,7 @@ predictor = None
 db = None
 
 def init_app():
-    """Initialise l'application et le modèle IA"""
+    """Initialise l'application et le modele IA"""
     global predictor, db
 
     try:
@@ -56,13 +56,13 @@ def init_app():
         if ACTIVE_MODEL == 'xgboost':
             print("MODE: XGBoost V3 Ultra Realiste (Model 2)")
             predictor = OlympicsAIPredictorXGBoost()
-            model_path = "../models/trained/xgboost_model.pkl"
+            model_path = "../models/trained/xgboost_predictions_v3.pkl"
 
             if os.path.exists(model_path):
                 predictor.load_models(model_path)
                 print("OK: Modele XGBoost V3 charge")
             else:
-                print("ERREUR: Modele XGBoost non trouve!")
+                print("ERREUR: Modele XGBoost V3 non trouve!")
                 print(f"Chemin: {model_path}")
                 print("Executez le notebook v3_xgboost_prediction.ipynb d'abord")
                 return False
@@ -82,7 +82,7 @@ def init_app():
                 print("OK: Modele V2 entraine et sauvegarde")
         else:
             print(f"ERREUR: Modele inconnu '{ACTIVE_MODEL}'")
-            print("Valeurs possibles: 'random_forest' ou 'xgboost'")
+            print("Modele par defaut: 'xgboost' (recommande)")
             return False
 
         return True
@@ -131,20 +131,20 @@ def data():
 
 @app.route('/predictions')
 def predictions():
-    """Page prédictions avec modèle IA V2"""
+    """Page predictions avec modele IA XGBoost V3"""
     
     # Vérifier que le modèle est initialisé
     if predictor is None:
         return render_template('predictions.html', error="Modele IA non initialise. Redemarrez l'application.")
     
     try:
-        # Prédictions France
+        # Predictions France
         france_results = predictor.predict_france_medals_realistic()
         
-        # Prédictions Top 25 pays
+        # Predictions Top 25 pays
         countries_results = predictor.predict_top25_countries_realistic()
         
-        # Prédictions athlètes (échantillon)
+        # Predictions athletes (echantillon)
         athletes_results = predictor.predict_individual_athletes_realistic()
         
         return render_template('predictions.html', 
@@ -388,11 +388,11 @@ def api_search_athletes():
     return jsonify(athletes.to_dict('records'))
 
 if __name__ == '__main__':
-    print("[START] Démarrage Webapp Neurolympics...")
+    print("[START] Demarrage Webapp Neurolympics...")
     
     if init_app():
-        print("[OK] Application initialisée avec succès")
-        print("[WEB] Accès: http://localhost:5000")
+        print("[OK] Application initialisee avec succes")
+        print("[WEB] Acces: http://localhost:5000")
         app.run(debug=True, host='0.0.0.0', port=5000)
     else:
-        print("[ERREUR] Échec initialisation application")
+        print("[ERREUR] Echec initialisation application")
