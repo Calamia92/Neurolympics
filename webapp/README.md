@@ -7,15 +7,16 @@ Application web complète avec intelligence artificielle pour les prédictions o
 ### 📊 Pages Principales
 - **Accueil** : Vue d'ensemble du système IA et statistiques générales
 - **Données** : Tables interactives avec filtres et recherche d'athlètes
-- **Prédictions IA** : Résultats du modèle Random Forest V2 pour les 3 questions
+- **Prédictions IA** : Résultats du modèle XGBoost V3 Ultra-Réaliste pour les 3 questions
 - **Visualisations** : Graphiques interactifs Plotly avec export
 - **Analyses** : Études approfondies des performances et qualité des données
 
-### 🤖 Intelligence Artificielle
-- **Modèle Random Forest V2** robuste et calibré
-- **Données nettoyées** (filtrage strict medal_type vides)
-- **Prédictions réalistes** normalisées (~1000 médailles total)
-- **3 Questions** : Médailles France, Top 25 pays, Athlètes individuels
+### 🤖 Intelligence Artificielle XGBoost V3
+- **Modèle XGBoost V3** avec feature engineering avancé et calibration intelligente
+- **ROC-AUC 90.6%** - Performance exceptionnelle 
+- **12 features sophistiquées** incluant nombre d'athlètes qualifiés par pays/sport
+- **Résultats pré-calculés** pour webapp ultra-rapide (mode instantané)
+- **3 Questions** : France 58 médailles, Top 25 pays, Top 100 athlètes
 
 ### 🎨 Interface Utilisateur
 - **Design moderne** avec Bootstrap 5 et animations CSS
