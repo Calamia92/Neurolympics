@@ -1,0 +1,614 @@
+{
+  "france": {
+    "gold": 7,
+    "silver": 9,
+    "bronze": 12,
+    "total": 28,
+    "athletes_2024": 600,
+    "method": "Modele IA CatBoost (Realiste)"
+  },
+  "top25": [
+    {
+      "rank": 1,
+      "country": "France",
+      "predicted_total": 127,
+      "predicted_gold": 38,
+      "predicted_silver": 41,
+      "predicted_bronze": 48,
+      "athletes_2024": 600,
+      "sports_count": 45
+    },
+    {
+      "rank": 2,
+      "country": "Germany",
+      "predicted_total": 88,
+      "predicted_gold": 26,
+      "predicted_silver": 29,
+      "predicted_bronze": 33,
+      "athletes_2024": 457,
+      "sports_count": 40
+    },
+    {
+      "rank": 3,
+      "country": "Australia",
+      "predicted_total": 81,
+      "predicted_gold": 24,
+      "predicted_silver": 26,
+      "predicted_bronze": 31,
+      "athletes_2024": 475,
+      "sports_count": 42
+    },
+    {
+      "rank": 4,
+      "country": "Great Britain",
+      "predicted_total": 68,
+      "predicted_gold": 20,
+      "predicted_silver": 22,
+      "predicted_bronze": 26,
+      "athletes_2024": 342,
+      "sports_count": 32
+    },
+    {
+      "rank": 5,
+      "country": "Netherlands",
+      "predicted_total": 62,
+      "predicted_gold": 18,
+      "predicted_silver": 20,
+      "predicted_bronze": 24,
+      "athletes_2024": 289,
+      "sports_count": 32
+    },
+    {
+      "rank": 6,
+      "country": "Japan",
+      "predicted_total": 55,
+      "predicted_gold": 16,
+      "predicted_silver": 18,
+      "predicted_bronze": 21,
+      "athletes_2024": 431,
+      "sports_count": 41
+    },
+    {
+      "rank": 7,
+      "country": "United States",
+      "predicted_total": 46,
+      "predicted_gold": 13,
+      "predicted_silver": 15,
+      "predicted_bronze": 18,
+      "athletes_2024": 619,
+      "sports_count": 44
+    },
+    {
+      "rank": 8,
+      "country": "Italy",
+      "predicted_total": 44,
+      "predicted_gold": 13,
+      "predicted_silver": 14,
+      "predicted_bronze": 17,
+      "athletes_2024": 397,
+      "sports_count": 37
+    },
+    {
+      "rank": 9,
+      "country": "Canada",
+      "predicted_total": 31,
+      "predicted_gold": 9,
+      "predicted_silver": 10,
+      "predicted_bronze": 12,
+      "athletes_2024": 332,
+      "sports_count": 40
+    },
+    {
+      "rank": 10,
+      "country": "China",
+      "predicted_total": 26,
+      "predicted_gold": 7,
+      "predicted_silver": 8,
+      "predicted_bronze": 11,
+      "athletes_2024": 398,
+      "sports_count": 42
+    },
+    {
+      "rank": 11,
+      "country": "Spain",
+      "predicted_total": 21,
+      "predicted_gold": 6,
+      "predicted_silver": 6,
+      "predicted_bronze": 9,
+      "athletes_2024": 401,
+      "sports_count": 38
+    },
+    {
+      "rank": 12,
+      "country": "Brazil",
+      "predicted_total": 17,
+      "predicted_gold": 5,
+      "predicted_silver": 5,
+      "predicted_bronze": 7,
+      "athletes_2024": 290,
+      "sports_count": 37
+    },
+    {
+      "rank": 13,
+      "country": "New Zealand",
+      "predicted_total": 13,
+      "predicted_gold": 3,
+      "predicted_silver": 4,
+      "predicted_bronze": 6,
+      "athletes_2024": 208,
+      "sports_count": 27
+    },
+    {
+      "rank": 14,
+      "country": "Kenya",
+      "predicted_total": 12,
+      "predicted_gold": 3,
+      "predicted_silver": 3,
+      "predicted_bronze": 6,
+      "athletes_2024": 74,
+      "sports_count": 6
+    },
+    {
+      "rank": 15,
+      "country": "Jamaica",
+      "predicted_total": 12,
+      "predicted_gold": 3,
+      "predicted_silver": 3,
+      "predicted_bronze": 6,
+      "athletes_2024": 65,
+      "sports_count": 4
+    },
+    {
+      "rank": 16,
+      "country": "Norway",
+      "predicted_total": 11,
+      "predicted_gold": 3,
+      "predicted_silver": 3,
+      "predicted_bronze": 5,
+      "athletes_2024": 109,
+      "sports_count": 21
+    },
+    {
+      "rank": 17,
+      "country": "Hungary",
+      "predicted_total": 10,
+      "predicted_gold": 3,
+      "predicted_silver": 3,
+      "predicted_bronze": 4,
+      "athletes_2024": 177,
+      "sports_count": 22
+    },
+    {
+      "rank": 18,
+      "country": "Denmark",
+      "predicted_total": 9,
+      "predicted_gold": 2,
+      "predicted_silver": 2,
+      "predicted_bronze": 5,
+      "athletes_2024": 131,
+      "sports_count": 23
+    },
+    {
+      "rank": 19,
+      "country": "Poland",
+      "predicted_total": 8,
+      "predicted_gold": 2,
+      "predicted_silver": 2,
+      "predicted_bronze": 4,
+      "athletes_2024": 226,
+      "sports_count": 28
+    },
+    {
+      "rank": 20,
+      "country": "Cuba",
+      "predicted_total": 8,
+      "predicted_gold": 2,
+      "predicted_silver": 2,
+      "predicted_bronze": 4,
+      "athletes_2024": 61,
+      "sports_count": 16
+    },
+    {
+      "rank": 21,
+      "country": "Switzerland",
+      "predicted_total": 7,
+      "predicted_gold": 2,
+      "predicted_silver": 2,
+      "predicted_bronze": 3,
+      "athletes_2024": 137,
+      "sports_count": 22
+    },
+    {
+      "rank": 22,
+      "country": "Sweden",
+      "predicted_total": 7,
+      "predicted_gold": 2,
+      "predicted_silver": 2,
+      "predicted_bronze": 3,
+      "athletes_2024": 125,
+      "sports_count": 21
+    },
+    {
+      "rank": 23,
+      "country": "Belgium",
+      "predicted_total": 6,
+      "predicted_gold": 1,
+      "predicted_silver": 1,
+      "predicted_bronze": 4,
+      "athletes_2024": 177,
+      "sports_count": 24
+    },
+    {
+      "rank": 24,
+      "country": "Ukraine",
+      "predicted_total": 6,
+      "predicted_gold": 1,
+      "predicted_silver": 1,
+      "predicted_bronze": 4,
+      "athletes_2024": 141,
+      "sports_count": 25
+    },
+    {
+      "rank": 25,
+      "country": "Serbia",
+      "predicted_total": 6,
+      "predicted_gold": 1,
+      "predicted_silver": 1,
+      "predicted_bronze": 4,
+      "athletes_2024": 114,
+      "sports_count": 16
+    }
+  ],
+  "athletes_top50": [
+    {
+      "name": "DESLAURIERS Mario",
+      "country": "Canada",
+      "sport": "Equestrian",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "NOVOTNA Veronika",
+      "country": "Czechia",
+      "sport": "Modern Pentathlon",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "LINSKENS Kyara",
+      "country": "Belgium",
+      "sport": "Basketball",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "CONSTIEN Valerie",
+      "country": "United States",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "PRIHODA JR Miloslav",
+      "country": "Czechia",
+      "sport": "Equestrian",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "SUTER Andrina",
+      "country": "Switzerland",
+      "sport": "Equestrian",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "YAMAMOTO Tomohiro",
+      "country": "Japan",
+      "sport": "Volleyball",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "TERVO Krista",
+      "country": "Finland",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "ROTHENBERGER Soenke",
+      "country": "Germany",
+      "sport": "Equestrian",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "LAROS Niels",
+      "country": "Netherlands",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "GUSTAFIAN Fathur",
+      "country": "Indonesia",
+      "sport": "Shooting",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "WILLIAMS Noah",
+      "country": "Great Britain",
+      "sport": "Diving",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "CAZAUTE Helena",
+      "country": "France",
+      "sport": "Volleyball",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "LEE Eunhye",
+      "country": "Korea",
+      "sport": "Table Tennis",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "van WESTERING Kai",
+      "country": "Netherlands",
+      "sport": "Swimming",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "IHEZUO Chinwendu",
+      "country": "Nigeria",
+      "sport": "Football",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "BURGHER Niesha",
+      "country": "Jamaica",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "HORAN Lindsey",
+      "country": "United States",
+      "sport": "Football",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "ABDELRAHMAN Ahmed Azab",
+      "country": "Egypt",
+      "sport": "Volleyball",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "GOMEZ Judith",
+      "country": "France",
+      "sport": "Shooting",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "OTTEN Joris",
+      "country": "Netherlands",
+      "sport": "Canoe Slalom",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "VALERO SERRANO David",
+      "country": "Spain",
+      "sport": "Cycling Mountain Bike",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "NASER Salwa Eid",
+      "country": "Bahrain",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "UEYAMA Koki",
+      "country": "Japan",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "MATSUDA Rinka",
+      "country": "Japan",
+      "sport": "Rugby Sevens",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "HAJIYEV Eljan",
+      "country": "Azerbaijan",
+      "sport": "Judo",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "YUAN Xinyue",
+      "country": "China",
+      "sport": "Volleyball",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "MARCIAL Eumir Felix",
+      "country": "Philippines",
+      "sport": "Boxing",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "YUAN Joshua",
+      "country": "United States",
+      "sport": "Badminton",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "ZEZE Meba Mickael",
+      "country": "France",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "BENITO PELLICER Mireia",
+      "country": "Spain",
+      "sport": "Cycling Road",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "KLAMER Rachel",
+      "country": "Netherlands",
+      "sport": "Triathlon",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "HARIMOTO Miwa",
+      "country": "Japan",
+      "sport": "Table Tennis",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "WALLER Jack",
+      "country": "Great Britain",
+      "sport": "Hockey",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "HLAVAC Vit",
+      "country": "Czechia",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "ZIMMERMAN Walker",
+      "country": "United States",
+      "sport": "Football",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "FLOOD Stacey",
+      "country": "Ireland",
+      "sport": "Rugby Sevens",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "LEMAIRE Nelson",
+      "country": "Dominican Republic",
+      "sport": "Football",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "RINGACI Irina",
+      "country": "Republic of Moldova",
+      "sport": "Wrestling",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "NG SHIU Tone",
+      "country": "New Zealand",
+      "sport": "Rugby Sevens",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "SIMONEAU Jacqueline",
+      "country": "Canada",
+      "sport": "Artistic Swimming",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "HA Jeemin",
+      "country": "Korea",
+      "sport": "Sailing",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "RAMOS Martin",
+      "country": "Argentina",
+      "sport": "Volleyball",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "CLARO FIZ Alejandro",
+      "country": "Cuba",
+      "sport": "Boxing",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "SANDOVAL Ahtziri",
+      "country": "Mexico",
+      "sport": "Artistic Gymnastics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "KLEIN IKKINK Isaya",
+      "country": "Netherlands",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "SHEA Maggie",
+      "country": "United States",
+      "sport": "Sailing",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "ZELJKO Fili",
+      "country": "Croatia",
+      "sport": "Table Tennis",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "SINGH Vikash",
+      "country": "India",
+      "sport": "Athletics",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    },
+    {
+      "name": "SUZUKI Miyu",
+      "country": "Japan",
+      "sport": "Hockey",
+      "medal_probability": 0.02,
+      "medal_probability_pct": 2.0
+    }
+  ]
+}
